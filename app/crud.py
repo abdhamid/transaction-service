@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from sqlalchemy import and_, func
+from sqlalchemy import and_, asc, desc, func
 from sqlalchemy.orm import Session
 
 from app.mapper import *
@@ -84,11 +84,10 @@ def reject_transaction(db: Session, transaction_id: int):
 
 
 def get_transactions(db: Session, limit: int = 100, offset: int = 0, sort_by: str = None):
-    if sort_by == "desc":
-        return db.query(models.Transaction).order_by(models.Transaction.id.desc()).offset(offset).limit(limit).all()
-    else:
-        return db.query(models.Transaction).order_by(models.Transaction.id.asc()).offset(offset).limit(limit).all()
-
+    if sort_by is not None:
+        direction = desc if sort_by[0] == '-' else asc
+        return db.query(models.Transaction).order_by(direction(getattr(models.Transaction, sort_by[1:]))).offset(offset).limit(limit).all()
+    return db.query(models.Transaction).offset(offset).limit(limit).all()
 
 def get_transaction_history(db: Session, transaction_id: int, is_unique: bool):
     if is_unique:
