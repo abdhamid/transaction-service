@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:postgres@localhost:5432/transaction_service"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/transaction_service"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
